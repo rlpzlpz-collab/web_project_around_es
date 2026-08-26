@@ -4,10 +4,7 @@ Proyecto de práctica en JavaScript, HTML y CSS. Muestra una galería de lugares
 
 ## 🧭 Descripción
 
-La página presenta el perfil de un usuario y una lista de tarjetas de lugares. El usuario puede:
-
-- Editar el nombre y la descripción de su perfil a través de una ventana emergente.
-- Ver una galería de tarjetas con imágenes y nombres de lugares.
+La página presenta el perfil de un usuario y una galería interactiva de tarjetas de lugares. El usuario puede editar su perfil, agregar nuevas tarjetas, darles "me gusta", eliminarlas y ver una vista ampliada de cada imagen.
 
 ## 🛠️ Tecnologías utilizadas
 
@@ -18,32 +15,65 @@ La página presenta el perfil de un usuario y una lista de tarjetas de lugares. 
 ## ✨ Funcionalidades implementadas
 
 - **Modal de edición de perfil**
-  - Se abre al hacer clic en el botón "Editar perfil".
-  - Se cierra al hacer clic en el botón de cierre (X).
+  - Se abre al hacer clic en el botón "Editar perfil" y se cierra con el botón de cierre (X).
   - Al abrirse, el formulario se rellena automáticamente con los datos actuales del perfil.
   - Al guardar (`submit`), los nuevos valores se reflejan en la página y el modal se cierra.
 
-- **Datos de tarjetas**
-  - Array `initialCards` con seis lugares (nombre + URL de imagen), como base para la generación dinámica de tarjetas.
+- **Galería de tarjetas dinámica**
+  - Las tarjetas se generan a partir del array `initialCards`, clonando un `<template>` para cada una (`getCardElement()`).
+  - Manejo de datos incompletos mediante parámetros predeterminados (nombre y/o imagen de marcador de posición).
+
+- **Agregar nueva tarjeta**
+  - Modal "Nuevo lugar" que se abre/cierra con `openModal()` / `closeModal()`.
+  - Al enviar el formulario, la nueva tarjeta se agrega a la galería sin recargar la página.
+
+- **Me gusta**
+  - Cada tarjeta tiene un botón de "me gusta" que alterna su estado visual al hacer clic (`classList.toggle`).
+
+- **Eliminar tarjeta**
+  - Cada tarjeta tiene un botón de eliminar que la remueve del DOM (`closest()` + `.remove()`).
+
+- **Vista ampliada de imagen**
+  - Al hacer clic en la imagen de una tarjeta, se abre un modal (`image-popup`) mostrando la imagen ampliada y su título.
 
 ## 📁 Estructura del proyecto
 
 ```
-around-the-us/
-├── index.html
+web_project_around_es/
+├── blocks/
+│   ├── card.css
+│   ├── cards.css
+│   ├── content.css
+│   ├── footer.css
+│   ├── header.css
+│   ├── page.css
+│   ├── popup.css
+│   └── profile.css
+├── images/
+│   ├── add-icon.svg
+│   ├── avatar.jpg
+│   ├── close.svg
+│   ├── delete-icon.svg
+│   ├── edit-icon.svg
+│   ├── like-active.svg
+│   ├── like-inactive.svg
+│   ├── logo.svg
+│   └── placeholder.jpg
 ├── pages/
 │   └── index.css
-├── images/
-└── scripts/
-    └── index.js
+├── scripts/
+│   └── index.js
+├── vendor/
+│   ├── fonts/
+│   │   ├── Inter-Black.woff2
+│   │   ├── Inter-Medium.woff2
+│   │   └── Inter-Regular.woff2
+│   ├── fonts.css
+│   └── normalize.css
+├── .prettierignore
+├── index.html
+└── README.md
 ```
-
-## 🚧 Próximos pasos
-
-- Generar dinámicamente las tarjetas de la galería a partir del array `initialCards`.
-- Implementar la funcionalidad de "Agregar tarjeta" (nuevo lugar).
-- Implementar "Eliminar tarjeta" y "Me gusta" en cada tarjeta.
-- Implementar la ventana emergente de vista ampliada de imagen (`image-popup`).
 
 ## ▶️ Cómo ejecutar el proyecto
 
