@@ -79,3 +79,7 @@ web_project_around_es/
 
 1. Clona o descarga el repositorio.
 2. Abre el archivo `index.html` en tu navegador.
+
+## 🌐 Ver en GitHub Pages
+
+Click aquí: https://rlpzlpz-collab.github.io/web_project_around_es/
