@@ -54,6 +54,8 @@ const imagePopupCaptionElement = imagePopup.querySelector(".popup__caption");
 
 const formElement = document.querySelector("#edit-profile-form");
 
+const editSubmitButton = editPopup.querySelector(".popup__button");
+
 function getCardElement({
   name = "Sin título",
   link = "./images/placeholder.jpg",
@@ -124,6 +126,7 @@ function fillProfileForm() {
 
 function handleOpenEditModal() {
   fillProfileForm();
+  toggleButtonState(formElement, editSubmitButton);
   openModal(editPopup);
 }
 
@@ -135,6 +138,17 @@ function handleProfileFormSubmit(evt) {
 
   closeModal(editPopup);
 }
+
+function toggleButtonState(form, button) {
+  button.disabled = !form.checkValidity();
+}
+
+function handleEditFormInput(evt) {
+  evt.target.reportValidity();
+  toggleButtonState(formElement, editSubmitButton);
+}
+
+formElement.addEventListener("input", handleEditFormInput);
 
 initialCards.forEach((card) => {
   renderCard(card.name, card.link, cardsListElement);
