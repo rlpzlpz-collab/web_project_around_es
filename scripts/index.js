@@ -113,10 +113,12 @@ function handleImageClick(evt) {
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  document.addEventListener("keydown", handleEscapeKey);
 }
 
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscapeKey);
 }
 
 function handleEscapeKey(evt) {
@@ -159,8 +161,6 @@ initialCards.forEach((card) => {
 });
 
 function setModalEventListeners() {
-  document.addEventListener("keydown", handleEscapeKey);
-
   editButton.addEventListener("click", handleOpenEditModal);
   closeButton.addEventListener("click", () => closeModal(editPopup));
   addCardButton.addEventListener("click", handleOpenNewCardModal);

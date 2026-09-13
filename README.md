@@ -36,6 +36,13 @@ La página presenta el perfil de un usuario y una galería interactiva de tarjet
 - **Vista ampliada de imagen**
   - Al hacer clic en la imagen de una tarjeta, se abre un modal (`image-popup`) mostrando la imagen ampliada y su título.
 
+- **Validación de formularios en tiempo real**
+  - Los formularios "Editar perfil" y "Nuevo lugar" se validan mientras el usuario escribe, usando las restricciones nativas de HTML (`required`, `minlength`, `maxlength`, `type="url"`).
+  - Cada campo muestra su propio mensaje de error debajo (tomado de `validationMessage`), en lugar de depender del aviso nativo del navegador.
+  - El botón de envío se activa o desactiva automáticamente según la validez del formulario (`toggleButtonState()`).
+  - Al abrir cualquiera de los dos modales, la validación se reinicia (`resetValidation()`), limpiando errores previos.
+  - Lógica centralizada en `scripts/validate.js`.
+
 ## 📁 Estructura del proyecto
 
 ```
@@ -62,7 +69,8 @@ web_project_around_es/
 ├── pages/
 │   └── index.css
 ├── scripts/
-│   └── index.js
+│   ├── index.js
+│   └── validate.js
 ├── vendor/
 │   ├── fonts/
 │   │   ├── Inter-Black.woff2
