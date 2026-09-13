@@ -80,6 +80,24 @@
   margin-bottom: 0;
 }
 
+.popup__input_type_error {
+  border-bottom-color: #ee3465;
+}
+
+.popup__error {
+  display: block;
+  min-height: 14px;
+  margin: -6px 0 10px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #ee3465;
+  opacity: 0;
+}
+
+.popup__error_visible {
+  opacity: 1;
+}
+
 .popup__title {
   margin: 0;
   font-size: 24px;

@@ -71,6 +71,7 @@
           <form class="popup__form" id="edit-profile-form">
             <input
               class="popup__input popup__input_type_name"
+              id="name"
               name="name"
               placeholder="Nombre"
               type="text"
@@ -78,8 +79,10 @@
               minlength="2"
               maxlength="40"
             />
+            <span class="popup__error" id="name-error"></span>
             <input
               class="popup__input popup__input_type_description"
+              id="description"
               name="description"
               placeholder="Acerca de mí"
               type="text"
@@ -87,6 +90,7 @@
               minlength="2"
               maxlength="200"
             />
+            <span class="popup__error" id="description-error"></span>
             <button class="button popup__button" type="submit">Guardar</button>
           </form>
         </div>
@@ -102,6 +106,7 @@
           <form class="popup__form" id="new-card-form">
             <input
               class="popup__input popup__input_type_card-name"
+              id="place-name"
               name="place-name"
               placeholder="Título"
               required
@@ -109,13 +114,16 @@
               maxlength="30"
               type="text"
             />
+            <span class="popup__error" id="place-name-error"></span>
             <input
               class="popup__input popup__input_type_url"
+              id="link"
               name="link"
               placeholder="Enlace a la imagen"
               required
               type="url"
             />
+            <span class="popup__error" id="link-error"></span>
             <button class="button popup__button" type="submit">Crear</button>
           </form>
         </div>
