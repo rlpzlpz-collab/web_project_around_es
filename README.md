@@ -1,93 +1,74 @@
 # Around The U.S.
 
-Proyecto de práctica en JavaScript, HTML y CSS. Muestra una galería de lugares (tarjetas con imagen y título) y un formulario de perfil editable, con ventanas emergentes (modales) manejadas mediante manipulación del DOM.
+Proyecto de práctica en TypeScript, HTML y CSS. Muestra una galería de lugares (tarjetas con imagen y título) y un perfil de usuario editable, con ventanas emergentes (modales) y validación de formularios.
 
 ## 🧭 Descripción
 
-La página presenta el perfil de un usuario y una galería interactiva de tarjetas de lugares. El usuario puede editar su perfil, agregar nuevas tarjetas, darles "me gusta", eliminarlas y ver una vista ampliada de cada imagen.
+La página presenta el perfil de un usuario y una galería interactiva de tarjetas. El usuario puede:
 
-## 🛠️ Tecnologías utilizadas
+- Editar su perfil (nombre y ocupación).
+- Agregar nuevas tarjetas con título y enlace a una imagen.
+- Darles "me gusta" y eliminarlas.
+- Ver una vista ampliada de cada imagen.
+
+Los formularios se validan en tiempo real y los modales se cierran con la X, haciendo clic fuera de ellos o con la tecla Esc.
+
+## 🛠️ Tecnologías y técnicas utilizadas
 
 - HTML5
 - CSS3 (metodología BEM)
-- JavaScript (ES6+)
+- TypeScript (con `strict` activado)
+- Programación Orientada a Objetos (POO): clases, herencia, encapsulamiento y acoplamiento débil mediante callbacks
+- Manipulación del DOM
 
-## ✨ Funcionalidades implementadas
+## 🧩 Arquitectura de clases
 
-- **Modal de edición de perfil**
-  - Se abre al hacer clic en el botón "Editar perfil" y se cierra con el botón de cierre (X).
-  - Al abrirse, el formulario se rellena automáticamente con los datos actuales del perfil.
-  - Al guardar (`submit`), los nuevos valores se reflejan en la página y el modal se cierra.
+| Clase            | Responsabilidad                                                                                                |
+| ---------------- | -------------------------------------------------------------------------------------------------------------- |
+| `FormValidator`  | Valida los campos de un formulario y controla el estado del botón de envío, usando un objeto de configuración. |
+| `Card`           | Construye una tarjeta a partir de una plantilla, con los eventos de me gusta, eliminar y abrir imagen.         |
+| `Section`        | Renderiza una lista de elementos en un contenedor mediante una función `renderer`.                             |
+| `Popup`          | Clase base de los modales: abrir, cerrar, cierre con Esc y clic en el fondo.                                   |
+| `PopupWithImage` | Hereda de `Popup`. Muestra una imagen ampliada con su leyenda.                                                 |
+| `PopupWithForm`  | Hereda de `Popup`. Gestiona el envío del formulario y lo reinicia al cerrar.                                   |
+| `UserInfo`       | Lee y actualiza el nombre y la ocupación del usuario en la página.                                             |
 
-- **Galería de tarjetas dinámica**
-  - Las tarjetas se generan a partir del array `initialCards`, clonando un `<template>` para cada una (`getCardElement()`).
-  - Manejo de datos incompletos mediante parámetros predeterminados (nombre y/o imagen de marcador de posición).
-
-- **Agregar nueva tarjeta**
-  - Modal "Nuevo lugar" que se abre/cierra con `openModal()` / `closeModal()`.
-  - Al enviar el formulario, la nueva tarjeta se agrega a la galería sin recargar la página.
-
-- **Me gusta**
-  - Cada tarjeta tiene un botón de "me gusta" que alterna su estado visual al hacer clic (`classList.toggle`).
-
-- **Eliminar tarjeta**
-  - Cada tarjeta tiene un botón de eliminar que la remueve del DOM (`closest()` + `.remove()`).
-
-- **Vista ampliada de imagen**
-  - Al hacer clic en la imagen de una tarjeta, se abre un modal (`image-popup`) mostrando la imagen ampliada y su título.
-
-- **Validación de formularios en tiempo real**
-  - Los formularios "Editar perfil" y "Nuevo lugar" se validan mientras el usuario escribe, usando las restricciones nativas de HTML (`required`, `minlength`, `maxlength`, `type="url"`).
-  - Cada campo muestra su propio mensaje de error debajo (tomado de `validationMessage`), en lugar de depender del aviso nativo del navegador.
-  - El botón de envío se activa o desactiva automáticamente según la validez del formulario (`toggleButtonState()`).
-  - Al abrir cualquiera de los dos modales, la validación se reinicia (`resetValidation()`), limpiando errores previos.
-  - Lógica centralizada en `scripts/validate.js`.
+`index.ts` solo crea las instancias de las clases y agrega los detectores de eventos.
 
 ## 📁 Estructura del proyecto
 
 ```
 web_project_around_es/
-├── blocks/
-│   ├── card.css
-│   ├── cards.css
-│   ├── content.css
-│   ├── footer.css
-│   ├── header.css
-│   ├── page.css
-│   ├── popup.css
-│   └── profile.css
-├── images/
-│   ├── add-icon.svg
-│   ├── avatar.jpg
-│   ├── close.svg
-│   ├── delete-icon.svg
-│   ├── edit-icon.svg
-│   ├── like-active.svg
-│   ├── like-inactive.svg
-│   ├── logo.svg
-│   └── placeholder.jpg
-├── pages/
-│   └── index.css
-├── scripts/
-│   ├── index.js
-│   └── validate.js
-├── vendor/
-│   ├── fonts/
-│   │   ├── Inter-Black.woff2
-│   │   ├── Inter-Medium.woff2
-│   │   └── Inter-Regular.woff2
-│   ├── fonts.css
-│   └── normalize.css
-├── .prettierignore
-├── index.html
+├── public/
+│   ├── blocks/
+│   ├── images/
+│   ├── pages/
+│   ├── vendor/
+│   ├── index.html
+│   └── *.js            (archivos compilados por tsc)
+├── src/
+│   ├── utils/
+│   │   ├── constants.ts
+│   │   └── dom.ts
+│   ├── Card.ts
+│   ├── FormValidator.ts
+│   ├── Popup.ts
+│   ├── PopupWithForm.ts
+│   ├── PopupWithImage.ts
+│   ├── Section.ts
+│   ├── UserInfo.ts
+│   └── index.ts
+├── tsconfig.json
 └── README.md
 ```
 
 ## ▶️ Cómo ejecutar el proyecto
 
-1. Clona o descarga el repositorio.
-2. Abre el archivo `index.html` en tu navegador.
+1. Clona el repositorio.
+2. Compila el código TypeScript desde la raíz del proyecto:
 
-## 🌐 Ver en GitHub Pages
+```
+   tsc
+```
 
-Click aquí: https://rlpzlpz-collab.github.io/web_project_around_es/
+Esto genera los archivos `.js` dentro de `public/`. 3. Abre la carpeta `public/` con un servidor local (por ejemplo, la extensión Live Server de VS Code o `npx serve public`). No abras `index.html` con doble clic, porque los módulos de ES no cargan desde `file://`.
