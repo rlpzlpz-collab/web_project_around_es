@@ -1,1 +1,2 @@
-vendor/normalize.css
+public/vendor
+public/**/*.js
