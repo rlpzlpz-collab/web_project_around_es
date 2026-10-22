@@ -60,6 +60,14 @@
   padding: 34px 36px;
 }
 
+.popup__content_type_confirm {
+  min-height: 0;
+}
+
+.popup__content_type_avatar {
+  min-height: 0;
+}
+
 .popup__form {
   margin-top: 27px;
 }

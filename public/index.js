@@ -1,42 +1,103 @@
 import { FormValidator } from "./FormValidator.js";
-import { defaultFormConfig, initialCards } from "./utils/constants.js";
+import { defaultFormConfig } from "./utils/constants.js";
 import { Card } from "./Card.js";
 import { Section } from "./Section.js";
 import { PopupWithImage } from "./PopupWithImage.js";
 import { PopupWithForm } from "./PopupWithForm.js";
+import { PopupWithConfirmation } from "./PopupWithConfirmation.js";
 import { UserInfo } from "./UserInfo.js";
 import { getElement } from "./utils/dom.js";
+import { Api } from "./Api.js";
 const editButton = getElement(".profile__edit-button");
 const addCardButton = getElement(".profile__add-button");
 const nameInput = getElement(".popup__input_type_name");
 const descriptionInput = getElement(".popup__input_type_description");
 const editForm = getElement("#edit-profile-form");
 const newCardForm = getElement("#new-card-form");
-const editValidator = new FormValidator(defaultFormConfig, editForm);
-const newCardValidator = new FormValidator(defaultFormConfig, newCardForm);
-editValidator.enableValidation();
-newCardValidator.enableValidation();
 const userInfo = new UserInfo({
     nameSelector: ".profile__title",
     jobSelector: ".profile__description",
 });
+const api = new Api({
+    baseUrl: "https://around-api.es.tripleten-services.com/v1",
+    headers: {
+        authorization: "62385e17-dbe0-42b2-afe5-2f2bf83e8a28",
+        "Content-Type": "application/json",
+    },
+});
+const profileAvatar = getElement(".profile__image");
+let userId;
+const editValidator = new FormValidator(defaultFormConfig, editForm);
+const newCardValidator = new FormValidator(defaultFormConfig, newCardForm);
+editValidator.enableValidation();
+newCardValidator.enableValidation();
+const confirmPopup = new PopupWithConfirmation("#confirm-popup");
+confirmPopup.setEventListeners();
+const avatarButton = getElement(".profile__avatar-button");
+const avatarForm = getElement("#avatar-form");
+const avatarValidator = new FormValidator(defaultFormConfig, avatarForm);
+avatarValidator.enableValidation();
+function handleAvatarFormSubmit(values) {
+    return api
+        .updateAvatar(values.avatar)
+        .then((data) => {
+        profileAvatar.src = data.avatar;
+    });
+}
+const avatarPopup = new PopupWithForm("#avatar-popup", handleAvatarFormSubmit);
+avatarPopup.setEventListeners();
+avatarButton.addEventListener("click", () => {
+    avatarValidator.resetValidation();
+    avatarPopup.open();
+});
 function handleImageClick(name, link) {
     imagePopup.open(name, link);
 }
+function handleLikeClick(id, isLiked) {
+    return isLiked ? api.unlikeCard(id) : api.likeCard(id);
+}
+function handleDeleteClick(id, element) {
+    confirmPopup.setSubmitAction(() => {
+        api
+            .deleteCard(id)
+            .then(() => {
+            element.remove();
+            confirmPopup.close();
+        })
+            .catch((err) => console.log(err));
+    });
+    confirmPopup.open();
+}
 function createCard(data) {
-    const card = new Card(data, "#card-template", handleImageClick);
+    const card = new Card(data, "#card-template", handleImageClick, handleLikeClick, handleDeleteClick, data.owner === userId);
     return card.getCardElement();
 }
-const cardsSection = new Section({
-    items: initialCards,
-    renderer: (item) => cardsSection.addItem(createCard(item)),
-}, ".cards__list");
-cardsSection.renderItems();
+let cardsSection;
+Promise.all([api.getUserInfo(), api.getInitialCards()])
+    .then(([user, cards]) => {
+    userInfo.setUserInfo({ name: user.name, job: user.about });
+    profileAvatar.src = user.avatar;
+    userId = user._id;
+    cardsSection = new Section({
+        items: cards,
+        renderer: (item) => cardsSection.addItem(createCard(item)),
+    }, ".cards__list");
+    cardsSection.renderItems();
+})
+    .catch((err) => console.log(err));
 function handleProfileFormSubmit(values) {
-    userInfo.setUserInfo({ name: values.name, job: values.description });
+    return api
+        .updateUserInfo({ name: values.name, about: values.description })
+        .then((data) => {
+        userInfo.setUserInfo({ name: data.name, job: data.about });
+    });
 }
 function handleCardFormSubmit(values) {
-    cardsSection.addItem(createCard({ name: values["place-name"], link: values.link }));
+    return api
+        .addCard({ name: values["place-name"], link: values.link })
+        .then((card) => {
+        cardsSection.addItem(createCard(card));
+    });
 }
 const imagePopup = new PopupWithImage("#image-popup");
 const editPopup = new PopupWithForm("#edit-popup", handleProfileFormSubmit);
