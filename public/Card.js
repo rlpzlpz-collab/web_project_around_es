@@ -1,19 +1,19 @@
 export class Card {
     _name;
     _link;
+    _id;
+    _isLiked;
+    _isOwner;
     _templateSelector;
     _handleCardClick;
+    _handleLike;
+    _handleDelete;
     _element;
     _imageElement;
     _titleElement;
     _likeButton;
     _deleteButton;
-    _id;
-    _isLiked;
-    _handleLike;
-    _handleDelete;
-    _isOwner;
-    constructor({ name = "Sin título", link = "./images/placeholder.jpg", _id, isLiked = false, owner }, templateSelector, handleCardClick, handleLike, handleDelete, isOwner) {
+    constructor({ name, link, _id, isLiked }, templateSelector, handleCardClick, handleLike, handleDelete, isOwner) {
         this._name = name;
         this._link = link;
         this._id = _id;
@@ -64,17 +64,15 @@ export class Card {
         this._imageElement.addEventListener("click", this._handleImageClick);
     }
     _handleLikeClick = () => {
-        if (!this._id)
-            return;
         this._handleLike(this._id, this._isLiked)
             .then((card) => {
-            this._isLiked = card.isLiked ?? false;
+            this._isLiked = card.isLiked;
             this._renderLike();
         })
-            .catch((err) => console.log(err));
+            .catch((err) => console.error(err));
     };
     _handleDeleteClick = () => {
-        this._handleDelete(this._id ?? "", this._element);
+        this._handleDelete(this._id, this._element);
     };
     _handleImageClick = () => {
         this._handleCardClick(this._name, this._link);

@@ -21,18 +21,18 @@ export class Api {
             headers: this._headers,
         }).then((res) => this._checkResponse(res));
     }
-    updateUserInfo({ name, about, }) {
+    updateUserInfo(data) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: "PATCH",
             headers: this._headers,
-            body: JSON.stringify({ name, about }),
+            body: JSON.stringify(data),
         }).then((res) => this._checkResponse(res));
     }
-    addCard({ name, link }) {
+    addCard(data) {
         return fetch(`${this._baseUrl}/cards/`, {
             method: "POST",
             headers: this._headers,
-            body: JSON.stringify({ name, link }),
+            body: JSON.stringify(data),
         }).then((res) => this._checkResponse(res));
     }
     likeCard(cardId) {

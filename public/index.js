@@ -64,7 +64,7 @@ function handleDeleteClick(id, element) {
             element.remove();
             confirmPopup.close();
         })
-            .catch((err) => console.log(err));
+            .catch((err) => console.error(err));
     });
     confirmPopup.open();
 }

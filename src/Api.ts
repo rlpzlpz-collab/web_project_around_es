@@ -1,22 +1,8 @@
+import type { CardData, CardFormData, UserData, UserFormData } from "./types.js";
+
 interface ApiConfig {
   baseUrl: string;
   headers: Record<string, string>;
-}
-
-export interface User {
-  name: string;
-  about: string;
-  avatar: string;
-  _id: string;
-}
-
-export interface ApiCard {
-  isLiked: boolean;
-  _id: string;
-  name: string;
-  link: string;
-  owner: string;
-  createdAt: string;
 }
 
 export class Api {
@@ -35,52 +21,46 @@ export class Api {
     throw new Error(`Error: ${res.status}`);
   }
 
-  getUserInfo(): Promise<User> {
+  getUserInfo(): Promise<UserData> {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
-    }).then((res) => this._checkResponse<User>(res));
+    }).then((res) => this._checkResponse<UserData>(res));
   }
 
-  getInitialCards(): Promise<ApiCard[]> {
+  getInitialCards(): Promise<CardData[]> {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
-    }).then((res) => this._checkResponse<ApiCard[]>(res));
+    }).then((res) => this._checkResponse<CardData[]>(res));
   }
 
-  updateUserInfo({
-    name,
-    about,
-  }: {
-    name: string;
-    about: string;
-  }): Promise<User> {
+  updateUserInfo(data: UserFormData): Promise<UserData> {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
-      body: JSON.stringify({ name, about }),
-    }).then((res) => this._checkResponse<User>(res));
+      body: JSON.stringify(data),
+    }).then((res) => this._checkResponse<UserData>(res));
   }
 
-  addCard({ name, link }: { name: string; link: string }): Promise<ApiCard> {
+  addCard(data: CardFormData): Promise<CardData> {
     return fetch(`${this._baseUrl}/cards/`, {
       method: "POST",
       headers: this._headers,
-      body: JSON.stringify({ name, link }),
-    }).then((res) => this._checkResponse<ApiCard>(res));
+      body: JSON.stringify(data),
+    }).then((res) => this._checkResponse<CardData>(res));
   }
 
-  likeCard(cardId: string): Promise<ApiCard> {
+  likeCard(cardId: string): Promise<CardData> {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
-    }).then((res) => this._checkResponse<ApiCard>(res));
+    }).then((res) => this._checkResponse<CardData>(res));
   }
 
-  unlikeCard(cardId: string): Promise<ApiCard> {
+  unlikeCard(cardId: string): Promise<CardData> {
     return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
-    }).then((res) => this._checkResponse<ApiCard>(res));
+    }).then((res) => this._checkResponse<CardData>(res));
   }
 
   deleteCard(cardId: string): Promise<unknown> {
@@ -90,11 +70,11 @@ export class Api {
   }).then((res) => this._checkResponse<unknown>(res));
 }
 
-updateAvatar(avatar: string): Promise<User> {
+updateAvatar(avatar: string): Promise<UserData> {
   return fetch(`${this._baseUrl}/users/me/avatar`, {
     method: "PATCH",
     headers: this._headers,
     body: JSON.stringify({ avatar }),
-  }).then((res) => this._checkResponse<User>(res));
+  }).then((res) => this._checkResponse<UserData >(res));
 }
 }

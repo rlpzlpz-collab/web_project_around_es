@@ -1,29 +1,23 @@
-export interface CardData {
-  name?: string;
-  link?: string;
-  _id?: string;
-  isLiked?: boolean;
-  owner?: string;
-}
+import type { CardData } from "./types.js";
 
 export class Card {
   private _name: string;
   private _link: string;
+  private _id: string;
+  private _isLiked: boolean;
+  private _isOwner: boolean;
   private _templateSelector: string;
   private _handleCardClick: (name: string, link: string) => void;
+  private _handleLike: (id: string, isLiked: boolean) => Promise<CardData>;
+  private _handleDelete: (id: string, element: HTMLElement) => void;
   private _element: HTMLElement;
   private _imageElement: HTMLImageElement;
   private _titleElement: HTMLElement;
   private _likeButton: HTMLButtonElement;
   private _deleteButton: HTMLButtonElement;
-  private _id?: string;
-  private _isLiked: boolean;
-  private _handleLike: (id: string, isLiked: boolean) => Promise<CardData>;
-  private _handleDelete: (id: string, element: HTMLElement) => void;
-  private _isOwner: boolean;
 
 constructor(
-  { name = "Sin título", link = "./images/placeholder.jpg", _id, isLiked = false, owner }: CardData,
+  { name, link, _id, isLiked }: CardData,
   templateSelector: string,
   handleCardClick: (name: string, link: string) => void,
   handleLike: (id: string, isLiked: boolean) => Promise<CardData>,
@@ -90,18 +84,17 @@ constructor(
     this._imageElement.addEventListener("click", this._handleImageClick);
   }
 
-  private _handleLikeClick = (): void => {
-    if (!this._id) return;
-    this._handleLike(this._id, this._isLiked)
-      .then((card) => {
-        this._isLiked = card.isLiked ?? false;
-        this._renderLike();
-      })
-      .catch((err) => console.log(err));
-  };
+private _handleLikeClick = (): void => {
+  this._handleLike(this._id, this._isLiked)
+    .then((card) => {
+      this._isLiked = card.isLiked;
+      this._renderLike();
+    })
+    .catch((err) => console.error(err));
+};
 
-  private _handleDeleteClick = (): void => {
-  this._handleDelete(this._id ?? "", this._element);
+private _handleDeleteClick = (): void => {
+  this._handleDelete(this._id, this._element);
 };
 
   private _handleImageClick = (): void => {

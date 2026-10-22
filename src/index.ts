@@ -1,7 +1,7 @@
 import { FormValidator } from "./FormValidator.js";
 import { defaultFormConfig } from "./utils/constants.js";
 import { Card } from "./Card.js";
-import type { CardData } from "./Card.js";
+import type { CardData } from "./types.js";
 import { Section } from "./Section.js";
 import { PopupWithImage } from "./PopupWithImage.js";
 import { PopupWithForm } from "./PopupWithForm.js";
@@ -79,7 +79,7 @@ function handleDeleteClick(id: string, element: HTMLElement): void {
         element.remove();
         confirmPopup.close();
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   });
   confirmPopup.open();
 }
