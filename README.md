@@ -77,17 +77,18 @@ web_project_around_es/
 │   ├── utils/
 │   │   ├── constants.ts
 │   │   └── dom.ts
-│   ├── Api.ts
-│   ├── Card.ts
-│   ├── FormValidator.ts
-│   ├── Popup.ts
-│   ├── PopupWithConfirmation.ts
-│   ├── PopupWithForm.ts
-│   ├── PopupWithImage.ts
-│   ├── Section.ts
-│   ├── UserInfo.ts
-│   ├── index.ts
-│   └── types.ts
+│   ├── components/
+│   │   ├── Api.ts
+│   │   ├── Card.ts
+│   │   ├── FormValidator.ts
+│   │   ├── Popup.ts
+│   │   ├── PopupWithConfirmation.ts
+│   │   ├── PopupWithForm.ts
+│   │   ├── PopupWithImage.ts
+│   │   ├── Section.ts
+│   │   ├── UserInfo.ts
+│   │   ├── index.ts
+│   │   ├── types.ts
 ├── tsconfig.json
 └── README.md
 ```

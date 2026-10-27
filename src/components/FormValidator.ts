@@ -8,7 +8,7 @@ export class FormValidator {
 
   constructor(config: FormConfig, form: HTMLFormElement) {
     const button = form.querySelector<HTMLButtonElement>(
-      config.submitButtonSelector
+      config.submitButtonSelector,
     );
     if (!button) {
       throw new Error("No se encontró el botón de envío del formulario");
@@ -17,7 +17,7 @@ export class FormValidator {
     this._form = form;
     this._button = button;
     this._inputs = Array.from(
-      form.querySelectorAll<HTMLInputElement>(config.inputSelector)
+      form.querySelectorAll<HTMLInputElement>(config.inputSelector),
     );
   }
 

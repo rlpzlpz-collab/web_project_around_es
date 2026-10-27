@@ -8,7 +8,10 @@ export class Section<T> {
   private _renderer: (item: T) => void;
   private _container: HTMLElement;
 
-  constructor({ items, renderer }: SectionConfig<T>, containerSelector: string) {
+  constructor(
+    { items, renderer }: SectionConfig<T>,
+    containerSelector: string,
+  ) {
     const container = document.querySelector<HTMLElement>(containerSelector);
     if (!container) {
       throw new Error(`No se encontró el contenedor ${containerSelector}`);

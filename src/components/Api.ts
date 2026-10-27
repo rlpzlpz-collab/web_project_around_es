@@ -1,4 +1,9 @@
-import type { CardData, CardFormData, UserData, UserFormData } from "./types.js";
+import type {
+  CardData,
+  CardFormData,
+  UserData,
+  UserFormData,
+} from "./types.js";
 
 interface ApiConfig {
   baseUrl: string;

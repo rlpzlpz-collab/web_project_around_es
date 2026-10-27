@@ -16,7 +16,9 @@ export class UserInfo {
     const nameElement = document.querySelector<HTMLElement>(nameSelector);
     const jobElement = document.querySelector<HTMLElement>(jobSelector);
     if (!nameElement || !jobElement) {
-      throw new Error("No se encontraron los elementos de información del usuario");
+      throw new Error(
+        "No se encontraron los elementos de información del usuario",
+      );
     }
     this._nameElement = nameElement;
     this._jobElement = jobElement;

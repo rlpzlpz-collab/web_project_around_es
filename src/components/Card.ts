@@ -16,29 +16,29 @@ export class Card {
   private _likeButton: HTMLButtonElement;
   private _deleteButton: HTMLButtonElement;
 
-constructor(
-  { name, link, _id, isLiked }: CardData,
-  templateSelector: string,
-  handleCardClick: (name: string, link: string) => void,
-  handleLike: (id: string, isLiked: boolean) => Promise<CardData>,
-  handleDelete: (id: string, element: HTMLElement) => void,
-  isOwner: boolean
-) {
-  this._name = name;
-  this._link = link;
-  this._id = _id;
-  this._isOwner = isOwner;
-  this._isLiked = isLiked;
-  this._handleLike = handleLike;
-  this._templateSelector = templateSelector;
-  this._handleCardClick = handleCardClick;
-  this._handleDelete = handleDelete;
-  this._element = this._getTemplate();
-  this._imageElement = this._query<HTMLImageElement>(".card__image");
-  this._titleElement = this._query<HTMLElement>(".card__title");
-  this._likeButton = this._query<HTMLButtonElement>(".card__like-button");
-  this._deleteButton = this._query<HTMLButtonElement>(".card__delete-button");
-}
+  constructor(
+    { name, link, _id, isLiked }: CardData,
+    templateSelector: string,
+    handleCardClick: (name: string, link: string) => void,
+    handleLike: (id: string, isLiked: boolean) => Promise<CardData>,
+    handleDelete: (id: string, element: HTMLElement) => void,
+    isOwner: boolean,
+  ) {
+    this._name = name;
+    this._link = link;
+    this._id = _id;
+    this._isOwner = isOwner;
+    this._isLiked = isLiked;
+    this._handleLike = handleLike;
+    this._templateSelector = templateSelector;
+    this._handleCardClick = handleCardClick;
+    this._handleDelete = handleDelete;
+    this._element = this._getTemplate();
+    this._imageElement = this._query<HTMLImageElement>(".card__image");
+    this._titleElement = this._query<HTMLElement>(".card__title");
+    this._likeButton = this._query<HTMLButtonElement>(".card__like-button");
+    this._deleteButton = this._query<HTMLButtonElement>(".card__delete-button");
+  }
 
   public getCardElement(): HTMLElement {
     this._imageElement.src = this._link;
@@ -84,23 +84,23 @@ constructor(
     this._imageElement.addEventListener("click", this._handleImageClick);
   }
 
-private _handleLikeClick = async (): Promise<void> => {
-  try {
-    const card = await this._handleLike(this._id, this._isLiked);
-    this._isLiked = card.isLiked;
-    this._renderLike();
-  } catch (err) {
-    console.error(err);
-  }
-};
+  private _handleLikeClick = async (): Promise<void> => {
+    try {
+      const card = await this._handleLike(this._id, this._isLiked);
+      this._isLiked = card.isLiked;
+      this._renderLike();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-private _handleDeleteClick = async (): Promise<void> => {
-  try {
-    await this._handleDelete(this._id, this._element);
-  } catch (err) {
-    console.error(err);
-  }
-};
+  private _handleDeleteClick = async (): Promise<void> => {
+    try {
+      await this._handleDelete(this._id, this._element);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   private _handleImageClick = (): void => {
     this._handleCardClick(this._name, this._link);
