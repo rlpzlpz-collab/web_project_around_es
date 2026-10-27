@@ -1,5 +1,5 @@
 import { FormValidator } from "./FormValidator.js";
-import { defaultFormConfig } from "./utils/constants.js";
+import { defaultFormConfig } from "../utils/constants.js";
 import { Card } from "./Card.js";
 import type { CardData } from "./types.js";
 import { Section } from "./Section.js";
@@ -8,7 +8,7 @@ import { PopupWithForm } from "./PopupWithForm.js";
 import { PopupWithConfirmation } from "./PopupWithConfirmation.js";
 import type { InputValues } from "./PopupWithForm.js";
 import { UserInfo } from "./UserInfo.js";
-import { getElement } from "./utils/dom.js";
+import { getElement } from "../utils/dom.js";
 import { Api } from "./Api.js";
 
 const editButton = getElement<HTMLButtonElement>(".profile__edit-button");
