@@ -15,19 +15,23 @@ export class PopupWithForm extends Popup {
     }
     setEventListeners() {
         super.setEventListeners();
-        this._form.addEventListener("submit", (evt) => {
+        this._form.addEventListener("submit", async (evt) => {
             evt.preventDefault();
             const submitButton = this._form.querySelector(".popup__button");
             const originalText = submitButton?.textContent ?? "";
             if (submitButton)
                 submitButton.textContent = "Guardando...";
-            Promise.resolve(this._handleFormSubmit(this._getInputValues()))
-                .then(() => this.close())
-                .catch((err) => console.log(err))
-                .finally(() => {
+            try {
+                await this._handleFormSubmit(this._getInputValues());
+                this.close();
+            }
+            catch {
+                // El error ya se registró en el handler; el popup se queda abierto.
+            }
+            finally {
                 if (submitButton)
                     submitButton.textContent = originalText;
-            });
+            }
         });
     }
     close() {

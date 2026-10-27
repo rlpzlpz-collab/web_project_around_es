@@ -47,12 +47,14 @@ const avatarForm = getElement<HTMLFormElement>("#avatar-form");
 const avatarValidator = new FormValidator(defaultFormConfig, avatarForm);
 avatarValidator.enableValidation();
 
-function handleAvatarFormSubmit(values: InputValues): Promise<void> {
-  return api
-    .updateAvatar(values.avatar)
-    .then((data) => {
-      profileAvatar.src = data.avatar;
-    });
+async function handleAvatarFormSubmit(values: InputValues): Promise<void> {
+  try {
+    const data = await api.updateAvatar(values.avatar);
+    profileAvatar.src = data.avatar;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 const avatarPopup = new PopupWithForm("#avatar-popup", handleAvatarFormSubmit);
@@ -72,14 +74,14 @@ function handleLikeClick(id: string, isLiked: boolean): Promise<CardData> {
 }
 
 function handleDeleteClick(id: string, element: HTMLElement): void {
-  confirmPopup.setSubmitAction(() => {
-    api
-      .deleteCard(id)
-      .then(() => {
-        element.remove();
-        confirmPopup.close();
-      })
-      .catch((err) => console.error(err));
+  confirmPopup.setSubmitAction(async () => {
+    try {
+      await api.deleteCard(id);
+      element.remove();
+      confirmPopup.close();
+    } catch (err) {
+      console.error(err);
+    }
   });
   confirmPopup.open();
 }
@@ -98,8 +100,12 @@ function createCard(data: CardData): HTMLElement {
 
 let cardsSection: Section<CardData>;
 
-Promise.all([api.getUserInfo(), api.getInitialCards()])
-  .then(([user, cards]) => {
+async function loadInitialData(): Promise<void> {
+  try {
+    const [user, cards] = await Promise.all([
+      api.getUserInfo(),
+      api.getInitialCards(),
+    ]);
     userInfo.setUserInfo({ name: user.name, job: user.about });
     profileAvatar.src = user.avatar;
     userId = user._id;
@@ -112,23 +118,37 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
       ".cards__list",
     );
     cardsSection.renderItems();
-  })
-  .catch((err) => console.log(err));
-
-function handleProfileFormSubmit(values: InputValues): Promise<void> {
-  return api
-    .updateUserInfo({ name: values.name, about: values.description })
-    .then((data) => {
-      userInfo.setUserInfo({ name: data.name, job: data.about });
-    });
+  } catch (err) {
+    console.error("Fallo al cargar datos iniciales:", err);
+  }
 }
 
-function handleCardFormSubmit(values: InputValues): Promise<void> {
-  return api
-    .addCard({ name: values["place-name"], link: values.link })
-    .then((card) => {
-      cardsSection.addItem(createCard(card));
+loadInitialData();
+
+async function handleProfileFormSubmit(values: InputValues): Promise<void> {
+  try {
+    const data = await api.updateUserInfo({
+      name: values.name,
+      about: values.description,
     });
+    userInfo.setUserInfo({ name: data.name, job: data.about });
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+async function handleCardFormSubmit(values: InputValues): Promise<void> {
+  try {
+    const card = await api.addCard({
+      name: values["place-name"],
+      link: values.link,
+    });
+    cardsSection.addItem(createCard(card));
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 }
 
 const imagePopup = new PopupWithImage("#image-popup");

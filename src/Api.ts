@@ -14,67 +14,75 @@ export class Api {
     this._headers = headers;
   }
 
-  private _checkResponse<T>(res: Response): Promise<T> {
+  private async _checkResponse<T>(res: Response): Promise<T> {
     if (res.ok) {
-      return res.json();
+      return await res.json();
     }
     throw new Error(`Error: ${res.status}`);
   }
 
-  getUserInfo(): Promise<UserData> {
-    return fetch(`${this._baseUrl}/users/me`, {
+  async getUserInfo(): Promise<UserData> {
+    const res = await fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
-    }).then((res) => this._checkResponse<UserData>(res));
+    });
+    return await this._checkResponse<UserData>(res);
   }
 
-  getInitialCards(): Promise<CardData[]> {
-    return fetch(`${this._baseUrl}/cards`, {
+  async getInitialCards(): Promise<CardData[]> {
+    const res = await fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
-    }).then((res) => this._checkResponse<CardData[]>(res));
+    });
+    return await this._checkResponse<CardData[]>(res);
   }
 
-  updateUserInfo(data: UserFormData): Promise<UserData> {
-    return fetch(`${this._baseUrl}/users/me`, {
+  async updateUserInfo(data: UserFormData): Promise<UserData> {
+    const res = await fetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       body: JSON.stringify(data),
-    }).then((res) => this._checkResponse<UserData>(res));
+    });
+    return await this._checkResponse<UserData>(res);
   }
 
-  addCard(data: CardFormData): Promise<CardData> {
-    return fetch(`${this._baseUrl}/cards/`, {
+  async addCard(data: CardFormData): Promise<CardData> {
+    const res = await fetch(`${this._baseUrl}/cards/`, {
       method: "POST",
       headers: this._headers,
       body: JSON.stringify(data),
-    }).then((res) => this._checkResponse<CardData>(res));
+    });
+    return await this._checkResponse<CardData>(res);
   }
 
-  likeCard(cardId: string): Promise<CardData> {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+  async likeCard(cardId: string): Promise<CardData> {
+    const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
-    }).then((res) => this._checkResponse<CardData>(res));
+    });
+    return await this._checkResponse<CardData>(res);
   }
 
-  unlikeCard(cardId: string): Promise<CardData> {
-    return fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
+  async unlikeCard(cardId: string): Promise<CardData> {
+    const res = await fetch(`${this._baseUrl}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
-    }).then((res) => this._checkResponse<CardData>(res));
+    });
+    return await this._checkResponse<CardData>(res);
   }
 
-  deleteCard(cardId: string): Promise<unknown> {
-  return fetch(`${this._baseUrl}/cards/${cardId}`, {
-    method: "DELETE",
-    headers: this._headers,
-  }).then((res) => this._checkResponse<unknown>(res));
-}
+  async deleteCard(cardId: string): Promise<unknown> {
+    const res = await fetch(`${this._baseUrl}/cards/${cardId}`, {
+      method: "DELETE",
+      headers: this._headers,
+    });
+    return await this._checkResponse<unknown>(res);
+  }
 
-updateAvatar(avatar: string): Promise<UserData> {
-  return fetch(`${this._baseUrl}/users/me/avatar`, {
-    method: "PATCH",
-    headers: this._headers,
-    body: JSON.stringify({ avatar }),
-  }).then((res) => this._checkResponse<UserData >(res));
-}
+  async updateAvatar(avatar: string): Promise<UserData> {
+    const res = await fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this._headers,
+      body: JSON.stringify({ avatar }),
+    });
+    return await this._checkResponse<UserData>(res);
+  }
 }

@@ -37,12 +37,15 @@ const avatarButton = getElement(".profile__avatar-button");
 const avatarForm = getElement("#avatar-form");
 const avatarValidator = new FormValidator(defaultFormConfig, avatarForm);
 avatarValidator.enableValidation();
-function handleAvatarFormSubmit(values) {
-    return api
-        .updateAvatar(values.avatar)
-        .then((data) => {
+async function handleAvatarFormSubmit(values) {
+    try {
+        const data = await api.updateAvatar(values.avatar);
         profileAvatar.src = data.avatar;
-    });
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
 }
 const avatarPopup = new PopupWithForm("#avatar-popup", handleAvatarFormSubmit);
 avatarPopup.setEventListeners();
@@ -57,14 +60,15 @@ function handleLikeClick(id, isLiked) {
     return isLiked ? api.unlikeCard(id) : api.likeCard(id);
 }
 function handleDeleteClick(id, element) {
-    confirmPopup.setSubmitAction(() => {
-        api
-            .deleteCard(id)
-            .then(() => {
+    confirmPopup.setSubmitAction(async () => {
+        try {
+            await api.deleteCard(id);
             element.remove();
             confirmPopup.close();
-        })
-            .catch((err) => console.error(err));
+        }
+        catch (err) {
+            console.error(err);
+        }
     });
     confirmPopup.open();
 }
@@ -73,31 +77,51 @@ function createCard(data) {
     return card.getCardElement();
 }
 let cardsSection;
-Promise.all([api.getUserInfo(), api.getInitialCards()])
-    .then(([user, cards]) => {
-    userInfo.setUserInfo({ name: user.name, job: user.about });
-    profileAvatar.src = user.avatar;
-    userId = user._id;
-    cardsSection = new Section({
-        items: cards,
-        renderer: (item) => cardsSection.addItem(createCard(item)),
-    }, ".cards__list");
-    cardsSection.renderItems();
-})
-    .catch((err) => console.log(err));
-function handleProfileFormSubmit(values) {
-    return api
-        .updateUserInfo({ name: values.name, about: values.description })
-        .then((data) => {
-        userInfo.setUserInfo({ name: data.name, job: data.about });
-    });
+async function loadInitialData() {
+    try {
+        const [user, cards] = await Promise.all([
+            api.getUserInfo(),
+            api.getInitialCards(),
+        ]);
+        userInfo.setUserInfo({ name: user.name, job: user.about });
+        profileAvatar.src = user.avatar;
+        userId = user._id;
+        cardsSection = new Section({
+            items: cards,
+            renderer: (item) => cardsSection.addItem(createCard(item)),
+        }, ".cards__list");
+        cardsSection.renderItems();
+    }
+    catch (err) {
+        console.error("Fallo al cargar datos iniciales:", err);
+    }
 }
-function handleCardFormSubmit(values) {
-    return api
-        .addCard({ name: values["place-name"], link: values.link })
-        .then((card) => {
+loadInitialData();
+async function handleProfileFormSubmit(values) {
+    try {
+        const data = await api.updateUserInfo({
+            name: values.name,
+            about: values.description,
+        });
+        userInfo.setUserInfo({ name: data.name, job: data.about });
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+async function handleCardFormSubmit(values) {
+    try {
+        const card = await api.addCard({
+            name: values["place-name"],
+            link: values.link,
+        });
         cardsSection.addItem(createCard(card));
-    });
+    }
+    catch (err) {
+        console.error(err);
+        throw err;
+    }
 }
 const imagePopup = new PopupWithImage("#image-popup");
 const editPopup = new PopupWithForm("#edit-popup", handleProfileFormSubmit);

@@ -1,7 +1,9 @@
 import { Popup } from "./Popup.js";
 
 export type InputValues = Record<string, string>;
-export type FormSubmitHandler = (values: InputValues) => Promise<unknown> | void;
+export type FormSubmitHandler = (
+  values: InputValues,
+) => Promise<unknown> | void;
 
 export class PopupWithForm extends Popup {
   private _form: HTMLFormElement;
@@ -16,14 +18,14 @@ export class PopupWithForm extends Popup {
     }
     this._form = form;
     this._inputs = Array.from(
-      form.querySelectorAll<HTMLInputElement>(".popup__input")
+      form.querySelectorAll<HTMLInputElement>(".popup__input"),
     );
     this._handleFormSubmit = handleFormSubmit;
   }
 
   public override setEventListeners(): void {
     super.setEventListeners();
-    this._form.addEventListener("submit", (evt: SubmitEvent) => {
+    this._form.addEventListener("submit", async (evt: SubmitEvent) => {
       evt.preventDefault();
 
       const submitButton =
@@ -31,12 +33,14 @@ export class PopupWithForm extends Popup {
       const originalText = submitButton?.textContent ?? "";
       if (submitButton) submitButton.textContent = "Guardando...";
 
-      Promise.resolve(this._handleFormSubmit(this._getInputValues()))
-        .then(() => this.close())
-        .catch((err) => console.log(err))
-        .finally(() => {
-          if (submitButton) submitButton.textContent = originalText;
-        });
+      try {
+        await this._handleFormSubmit(this._getInputValues());
+        this.close();
+      } catch {
+        // El error ya se registró en el handler; el popup se queda abierto.
+      } finally {
+        if (submitButton) submitButton.textContent = originalText;
+      }
     });
   }
 

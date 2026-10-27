@@ -84,17 +84,22 @@ constructor(
     this._imageElement.addEventListener("click", this._handleImageClick);
   }
 
-private _handleLikeClick = (): void => {
-  this._handleLike(this._id, this._isLiked)
-    .then((card) => {
-      this._isLiked = card.isLiked;
-      this._renderLike();
-    })
-    .catch((err) => console.error(err));
+private _handleLikeClick = async (): Promise<void> => {
+  try {
+    const card = await this._handleLike(this._id, this._isLiked);
+    this._isLiked = card.isLiked;
+    this._renderLike();
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-private _handleDeleteClick = (): void => {
-  this._handleDelete(this._id, this._element);
+private _handleDeleteClick = async (): Promise<void> => {
+  try {
+    await this._handleDelete(this._id, this._element);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
   private _handleImageClick = (): void => {

@@ -63,16 +63,23 @@ export class Card {
         this._deleteButton.addEventListener("click", this._handleDeleteClick);
         this._imageElement.addEventListener("click", this._handleImageClick);
     }
-    _handleLikeClick = () => {
-        this._handleLike(this._id, this._isLiked)
-            .then((card) => {
+    _handleLikeClick = async () => {
+        try {
+            const card = await this._handleLike(this._id, this._isLiked);
             this._isLiked = card.isLiked;
             this._renderLike();
-        })
-            .catch((err) => console.error(err));
+        }
+        catch (err) {
+            console.error(err);
+        }
     };
-    _handleDeleteClick = () => {
-        this._handleDelete(this._id, this._element);
+    _handleDeleteClick = async () => {
+        try {
+            await this._handleDelete(this._id, this._element);
+        }
+        catch (err) {
+            console.error(err);
+        }
     };
     _handleImageClick = () => {
         this._handleCardClick(this._name, this._link);
