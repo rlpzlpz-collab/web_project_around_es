@@ -14,25 +14,28 @@ export class Api {
     this._headers = headers;
   }
 
-  private async _checkResponse<T>(res: Response): Promise<T> {
-    if (res.ok) {
-      return await res.json();
-    }
-    throw new Error(`Error: ${res.status}`);
-  }
-
   async getUserInfo(): Promise<UserData> {
     const res = await fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers,
     });
-    return await this._checkResponse<UserData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async getInitialCards(): Promise<CardData[]> {
     const res = await fetch(`${this._baseUrl}/cards`, {
       headers: this._headers,
     });
-    return await this._checkResponse<CardData[]>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async updateUserInfo(data: UserFormData): Promise<UserData> {
@@ -41,7 +44,12 @@ export class Api {
       headers: this._headers,
       body: JSON.stringify(data),
     });
-    return await this._checkResponse<UserData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async addCard(data: CardFormData): Promise<CardData> {
@@ -50,7 +58,12 @@ export class Api {
       headers: this._headers,
       body: JSON.stringify(data),
     });
-    return await this._checkResponse<CardData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async likeCard(cardId: string): Promise<CardData> {
@@ -58,7 +71,12 @@ export class Api {
       method: "PUT",
       headers: this._headers,
     });
-    return await this._checkResponse<CardData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async unlikeCard(cardId: string): Promise<CardData> {
@@ -66,7 +84,12 @@ export class Api {
       method: "DELETE",
       headers: this._headers,
     });
-    return await this._checkResponse<CardData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async deleteCard(cardId: string): Promise<unknown> {
@@ -74,7 +97,12 @@ export class Api {
       method: "DELETE",
       headers: this._headers,
     });
-    return await this._checkResponse<unknown>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 
   async updateAvatar(avatar: string): Promise<UserData> {
@@ -83,6 +111,11 @@ export class Api {
       headers: this._headers,
       body: JSON.stringify({ avatar }),
     });
-    return await this._checkResponse<UserData>(res);
+
+    if (res.ok) {
+      return await res.json();
+    }
+
+    throw new Error(`Error: ${res.status}`);
   }
 }
